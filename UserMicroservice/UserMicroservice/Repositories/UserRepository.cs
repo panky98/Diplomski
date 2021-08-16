@@ -15,14 +15,14 @@ namespace UserMicroservice.Repositories
             this.Users = _context.Set<User>();
         }
 
-        public bool Exist(string username, string pass)
+        public int Exist(string username, string pass)
         {
             User u = this.Users.Where(x => x.Username == username).FirstOrDefault();
             if(u!=null)
             {
-                return BCrypt.Net.BCrypt.Verify(pass, u.Password);
+                return BCrypt.Net.BCrypt.Verify(pass, u.Password)==true?u.Id:-1;
             }
-            return false;
+            return -1;
         }
     }
 }

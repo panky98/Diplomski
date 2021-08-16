@@ -8,6 +8,6 @@ namespace UserMicroservice.Repositories
 {
     public interface IUserRepository:IRepository<User>
     {
-        public bool Exist(string username, string pass);
+        public int Exist(string username, string pass);
     }
 }
