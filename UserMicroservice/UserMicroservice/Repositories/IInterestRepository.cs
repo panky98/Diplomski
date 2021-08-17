@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserMicroservice.Models;
 
 namespace UserMicroservice.Repositories
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IInterestRepository:IRepository<Interest>
     {
-        IUserRepository Users { get; }
-        IInterestRepository Interests { get; }
 
-        int Commit();
     }
 }

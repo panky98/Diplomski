@@ -29,7 +29,7 @@ namespace UserMicroservice.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult getAll()
+        public IActionResult GetAll()
         {
             return new JsonResult(_unitOfWork.Users.GetAll());
         }
