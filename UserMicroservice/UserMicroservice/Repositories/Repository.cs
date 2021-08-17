@@ -30,6 +30,16 @@ namespace UserMicroservice.Repositories
             return true;
         }
 
+        public ICollection<T> FindAll(Expression<Func<T, bool>> expression)
+        {
+            return _context.Set<T>().Where(expression).ToList();
+        }
+
+        public T FindOneByExpression(Expression<Func<T, bool>> expression)
+        {
+            return _context.Set<T>().Where(expression).FirstOrDefault();
+        }
+
         public virtual ICollection<T> GetAll()
         {
             return new List<T>(this._context.Set<T>().ToListAsync<T>().Result.ToArray());

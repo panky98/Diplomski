@@ -38,6 +38,10 @@ namespace UserMicroservice.Controllers
         public IActionResult AddOne([FromBody]User newUser)
         {
             newUser.Password = Models.User.HashPassword(newUser.Password);
+            if (_unitOfWork.Users.FindOneByExpression(x => x.Username == newUser.Username) != null)
+                return BadRequest("Username already exists!");
+
+
             _unitOfWork.Users.Add(newUser);
             _unitOfWork.Commit();
             return new OkResult();

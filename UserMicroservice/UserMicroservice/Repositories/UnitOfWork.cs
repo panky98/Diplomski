@@ -12,11 +12,13 @@ namespace UserMicroservice.Repositories
 
         public IUserRepository Users { get; private set; }
         public IInterestRepository Interests { get; private set; }
+        public IInterestByUserRepository InterestsByUsers { get; private set; }
         public UnitOfWork(UserContext context)
         {
             _context = context;
             Users = new UserRepository(_context);
             Interests = new InterestRepository(_context);
+            InterestsByUsers = new InterestByUserRepository(_context);
         }
 
         public int Commit()

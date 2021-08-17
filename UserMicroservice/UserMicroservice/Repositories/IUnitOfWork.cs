@@ -9,6 +9,7 @@ namespace UserMicroservice.Repositories
     {
         IUserRepository Users { get; }
         IInterestRepository Interests { get; }
+        IInterestByUserRepository InterestsByUsers{ get; }
 
         int Commit();
     }

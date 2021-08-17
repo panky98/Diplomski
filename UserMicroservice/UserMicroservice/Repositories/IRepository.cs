@@ -13,5 +13,8 @@ namespace UserMicroservice.Repositories
         bool Delete(T obj);
         bool Update(T obj);
         ICollection<T> GetAll();
+        ICollection<T> FindAll(Expression<Func<T, bool>> expression);
+        T FindOneByExpression(Expression<Func<T, bool>> expression);
+
     }
 }
