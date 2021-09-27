@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System;
+﻿using BCrypt.Net;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
-namespace UserMicroservice.Models
+namespace Models.UserMicroservice
 {
     public class User
     {

@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Models.UserMicroservice;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using UserMicroservice.Models;
 using UserMicroservice.Repositories;
 
 namespace UserMicroservice.Controllers
@@ -37,7 +35,7 @@ namespace UserMicroservice.Controllers
         [HttpPost]
         public IActionResult AddOne([FromBody]User newUser)
         {
-            newUser.Password = Models.User.HashPassword(newUser.Password);
+            newUser.Password = Models.UserMicroservice.User.HashPassword(newUser.Password);
             if (_unitOfWork.Users.FindOneByExpression(x => x.Username == newUser.Username) != null)
                 return BadRequest("Username already exists!");
 

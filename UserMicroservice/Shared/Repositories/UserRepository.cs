@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+using Models;
+using Models.UserMicroservice;
 using System.Linq;
-using System.Threading.Tasks;
-using UserMicroservice.Models;
+using UserMicroservice.Repositories;
 
-namespace UserMicroservice.Repositories
+namespace Shared.Repositories
 {
     public class UserRepository:Repository<User>,IUserRepository
     {

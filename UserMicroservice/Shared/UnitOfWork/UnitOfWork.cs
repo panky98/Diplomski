@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UserMicroservice.Models;
+﻿using Models;
+using Shared.Repositories;
+
 
 namespace UserMicroservice.Repositories
 {
@@ -13,6 +11,8 @@ namespace UserMicroservice.Repositories
         public IUserRepository Users { get; private set; }
         public IInterestRepository Interests { get; private set; }
         public IInterestByUserRepository InterestsByUsers { get; private set; }
+
+
         public UnitOfWork(UserContext context)
         {
             _context = context;

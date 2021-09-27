@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using System.Linq.Expressions;
-using UserMicroservice.Models;
+using Models;
 
-namespace UserMicroservice.Repositories
+namespace Shared.Repositories
 {
     public abstract class Repository<T> : IRepository<T> where T : class
     {

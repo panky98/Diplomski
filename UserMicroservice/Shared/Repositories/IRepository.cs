@@ -1,10 +1,9 @@
-﻿using UserMicroservice.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace UserMicroservice.Repositories
+namespace Shared.Repositories
 {
     public interface IRepository<T> where T : class
     {
