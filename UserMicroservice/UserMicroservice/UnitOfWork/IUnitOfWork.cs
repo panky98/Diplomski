@@ -1,5 +1,4 @@
-﻿using Shared.Repositories;
-using System;
+﻿using System;
 
 
 namespace UserMicroservice.Repositories

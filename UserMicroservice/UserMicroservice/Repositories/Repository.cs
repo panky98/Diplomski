@@ -3,9 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Models;
+using UserMicroservice.Configuration;
 
-namespace Shared.Repositories
+namespace UserMicroservice.Repositories
 {
     public abstract class Repository<T> : IRepository<T> where T : class
     {

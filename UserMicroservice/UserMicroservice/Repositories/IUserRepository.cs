@@ -1,6 +1,7 @@
-﻿using Models.UserMicroservice;
+﻿
+using Models.UserMicroservice;
 
-namespace Shared.Repositories
+namespace UserMicroservice.Repositories
 {
     public interface IUserRepository:IRepository<User>
     {

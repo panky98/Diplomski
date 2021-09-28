@@ -8,6 +8,10 @@ services:
     build:
       context: .
       dockerfile: UserMicroservice\Dockerfile
+    depends_on:
+        - mssql
+    links:
+        - mssql
 
   eventmicroservice:
     image: ${DOCKER_REGISTRY-}eventmicroservice
@@ -22,3 +26,7 @@ services:
     environment:
         SA_PASSWORD: "Password123"
         ACCEPT_EULA: "Y"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPassword123", "-Q", "select 1"]
+      interval: 1s
+      retries: 20

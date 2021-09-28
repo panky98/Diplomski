@@ -13,14 +13,11 @@ RUN dotnet restore "UserMicroservice/UserMicroservice.csproj"
 COPY . .
 WORKDIR "/src/UserMicroservice"
 RUN dotnet build "UserMicroservice.csproj" -c Release -o /app/build
-RUN chmod +x ./entrypoint.sh
-CMD /bin/bash ./entrypoint.sh
 
-#FROM build AS publish
-#RUN dotnet publish "UserMicroservice.csproj" -c Release -o /app/publish
-#
-#FROM base AS final
-#WORKDIR /app
-#COPY --from=publish /app/publish .
-#ENTRYPOINT ["dotnet", "UserMicroservice.dll"]
+FROM build AS publish
+RUN dotnet publish "UserMicroservice.csproj" -c Release -o /app/publish
 
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "UserMicroservice.dll"]

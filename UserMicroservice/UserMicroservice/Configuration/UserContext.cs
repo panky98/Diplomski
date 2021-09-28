@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.UserMicroservice;
 
-namespace Models
+namespace UserMicroservice.Configuration
 {
     public class UserContext : DbContext
     {

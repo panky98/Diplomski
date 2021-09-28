@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Models;
-using Models.UserMicroservice;
 using UserMicroservice.Repositories;
+using Models.UserMicroservice;
+using UserMicroservice.Configuration;
 
-namespace Shared.Repositories
+namespace UserMicroservice.Repositories
 {
     public class InterestByUserRepository:Repository<InterestByUser>,IInterestByUserRepository
     {

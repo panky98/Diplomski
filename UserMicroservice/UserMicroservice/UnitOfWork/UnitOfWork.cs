@@ -1,6 +1,7 @@
-﻿using Models;
-using Shared.Repositories;
+﻿
 
+
+using UserMicroservice.Configuration;
 
 namespace UserMicroservice.Repositories
 {
