@@ -1,0 +1,9 @@
+<form>
+  <label for="nameInput">Name </label><input type="text" pInputText /><br/>
+  <label for="surnameInput">Surname </label><input type="text" id="surnameInput" pInputText /><br/>
+  <label for="usernameInput">Username </label><input type="text" id="usernameInput" pInputText /><br/>
+  <label for="passwordInput">Password </label><input type="password" type="password"/><br/>
+  <label for="interestsInput">Interests </label>
+  <p-multiSelect [options]="selectOptions" [(ngModel)]="selectedOptions"></p-multiSelect><br/>
+  <button type="submit">Register</button>
+</form>

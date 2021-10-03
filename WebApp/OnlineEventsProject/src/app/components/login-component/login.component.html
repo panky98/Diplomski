@@ -1,0 +1,11 @@
+<form (ngSubmit)="onSubmit()" #forma="ngForm">
+  <label for="usernameInput">Username </label><input type="text" name="usernameInput" class="form-control" ngModel required #usernameInput="ngModel"><br/>
+    <div *ngIf="usernameInput.touched &&usernameInput.invalid">
+      <label class="lblMessage">*Enter username</label>
+    </div>
+  <label for="passwordInput">Password </label><input type="text" type="password"  name="passwordInput" ngModel required class="form-control" #passwordInput="ngModel"><br/>
+    <div *ngIf="passwordInput.touched &&passwordInput.invalid">
+      <label class="lblMessage">*Enter password</label>
+    </div>
+  <button [disabled]="forma.invalid"class="btn btn-primary" type="submit">Log in</button>
+</form>

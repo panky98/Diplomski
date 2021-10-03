@@ -30,3 +30,5 @@ services:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPassword123", "-Q", "select 1"]
       interval: 1s
       retries: 20
+  redis-api:
+    image: redis:latest
