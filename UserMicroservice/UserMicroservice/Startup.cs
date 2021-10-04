@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.Json;
 using UserMicroservice.Configuration;
 using UserMicroservice.Repositories;
+using UserMicroservice.Services;
 
 namespace UserMicroservice
 {
@@ -89,6 +90,7 @@ namespace UserMicroservice
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddHostedService<EventCreatedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
