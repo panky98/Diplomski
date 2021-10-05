@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Models;
 using Models.UserMicroservice;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,7 +52,13 @@ namespace UserMicroservice.Controllers
         {
             int idUser = _unitOfWork.Users.Exist(username, pass);
             if (idUser!=-1)
-                return Ok(GenerateJWTToken(_unitOfWork.Users.GetOne(idUser)));
+            {
+                var response = new TokenResponse()
+                {
+                    Token = GenerateJWTToken(_unitOfWork.Users.GetOne(idUser))
+                };
+                return Ok(response);
+            }
             else
                 return NotFound();
         }

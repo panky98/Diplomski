@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
   selector: 'app-events-list',
   templateUrl: './events-list.component.html',
   styleUrls: ['./events-list.component.css']
 })
-export class EventsListComponent implements OnInit {
+export class EventsListComponent implements OnInit,OnDestroy {
 
-  constructor() { }
+  constructor(private signalRService:SignalrService) {
+
+  }
+  ngOnDestroy(): void {
+    this.signalRService.disconnect();
+  }
 
   ngOnInit(): void {
+    this.signalRService.connect(localStorage.getItem("eventsToken"));
   }
 
 }

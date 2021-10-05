@@ -9,11 +9,11 @@ services:
       context: .
       dockerfile: UserMicroservice\Dockerfile
     depends_on:
-        - mssql
         - broker
-        - zookeeper
+        - mssql
     links:
         - mssql
+        - broker
 
   eventmicroservice:
     image: ${DOCKER_REGISTRY-}eventmicroservice
@@ -38,6 +38,8 @@ services:
 
   redis-api:
     image: redis:latest
+    ports:
+       - 6379:6379 
 
   zookeeper:
     image: wurstmeister/zookeeper

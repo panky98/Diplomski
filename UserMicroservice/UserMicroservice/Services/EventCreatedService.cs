@@ -30,7 +30,17 @@ namespace UserMicroservice.Services
             };
 
             this._consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+
+            _logger.LogInformation("EventCreatedService is trying to connect to event-created topic!");
             this._consumer.Subscribe("event-created");
+
+            while (!stoppingToken.IsCancellationRequested && (this._consumer.Subscription == null || this._consumer.Subscription.Count==0))
+            {
+                Task.Delay(500);
+                this._consumer.Subscribe("event-created");
+                _logger.LogInformation("EventCreatedService is trying to connect to event-created topic!");
+            }
+
             _logger.LogInformation("EventCreatedService has subscribed to event-created topic!");
             new Thread(() => StartConsumerLoop(stoppingToken)).Start();
 

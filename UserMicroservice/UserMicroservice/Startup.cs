@@ -91,6 +91,8 @@ namespace UserMicroservice
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddHostedService<EventCreatedService>();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +121,7 @@ namespace UserMicroservice
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationsHub>("/notifications");
             });
         }
     }

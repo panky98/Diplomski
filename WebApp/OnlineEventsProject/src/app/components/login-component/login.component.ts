@@ -1,8 +1,10 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import {catchError} from 'rxjs/operators'
+
 
 @Component({
   selector: 'app-login',
@@ -21,13 +23,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(){
-      this.httpClient.get("http://localhost:52800/api/User/LogIn/"+this.forma?.value.usernameInput+"/"+this.forma?.value.passwordInput)
+      this.httpClient.get<{"token":string}>("http://localhost:52800/api/User/LogIn/"+this.forma?.value.usernameInput+"/"+this.forma?.value.passwordInput).pipe(catchError((error=>{
+        return throwError(error);
+      })))
       .subscribe((response)=>{
-          console.log(response);
+          localStorage.setItem("eventsToken",response.token)
+          this.router.navigate(["events"]);
       },(error:HttpErrorResponse)=>{
         console.log(error);
-        if(error.status==200)
-          this.router.navigate(["events"]);
       });
   }
 }
