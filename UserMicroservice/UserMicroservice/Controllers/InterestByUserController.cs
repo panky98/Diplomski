@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.UserMicroservice;
+using System.Threading.Tasks;
 using UserMicroservice.Repositories;
 
 namespace UserMicroservice.Controllers
@@ -20,6 +21,7 @@ namespace UserMicroservice.Controllers
         {
             return Ok(this._unitOfWork.InterestsByUsers.GetAll());
         }
+
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetOne([FromRoute(Name = "id")] int id)

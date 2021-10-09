@@ -25,6 +25,7 @@ services:
     depends_on:
         - broker
         - zookeeper
+        - mongodb       
 
   mssql:
     image: "mcr.microsoft.com/mssql/server"
@@ -56,6 +57,21 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: broker
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
+  schema_registry:
+    image: confluentinc/cp-schema-registry:5.5.0
+    hostname: schema_registry
+    container_name: schema_registry
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema_registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN: '*'
+      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS: 'GET,POST,PUT,OPTIONS'
+
   # This "container" is a workaround to pre-create topics
   kafka-setup:
     image: confluentinc/cp-kafka:5.1.1
@@ -70,3 +86,21 @@ services:
       # We override the image's `command` anyways, hence this container will not start a broker.
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
+
+  mongodb:
+    image : mongo
+    container_name: mongodb
+    environment:
+        - MONGO_INITDB_DATABASE=events
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=pass12345
+    volumes:
+        - /home/barry/mongodb/database:/data/db
+    ports:
+        - 27017:27017
+    healthcheck:
+        test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
+        interval: 30s
+        timeout: 10s
+        retries: 3
+    restart: unless-stopped

@@ -1,9 +1,13 @@
 ﻿using Confluent.Kafka;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
+using Models.EventMicroservice;
+using Confluent.SchemaRegistry.Serdes;
 
 namespace UserMicroservice.Services
 {
@@ -16,7 +20,7 @@ namespace UserMicroservice.Services
         }
 
         private readonly ILogger<EventCreatedService> _logger;
-        private IConsumer<Ignore,string> _consumer;
+        private IConsumer<Null,Event> _consumer;
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -29,7 +33,9 @@ namespace UserMicroservice.Services
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            this._consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+            this._consumer = new ConsumerBuilder<Null, Event>(config)
+                                    .SetValueDeserializer(new JsonDeserializer<Event>().AsSyncOverAsync())
+                                    .Build();
 
             _logger.LogInformation("EventCreatedService is trying to connect to event-created topic!");
             this._consumer.Subscribe("event-created");
@@ -57,7 +63,8 @@ namespace UserMicroservice.Services
                     var cr = this._consumer.Consume(cancellationToken);
 
                     // Handle message...
-                    this._logger.LogInformation($"{cr.Message.Key}: {cr.Message.Value}ms");
+
+                    this._logger.LogInformation($"Received: {cr.Message.Key}: {cr.Message.Value.Code}ms");
                 }
                 catch (OperationCanceledException)
                 {
@@ -67,6 +74,10 @@ namespace UserMicroservice.Services
                 {
                     // Consumer errors should generally be ignored (or logged) unless fatal.
                     this._logger.LogError($"Consume error: {e.Error.Reason}");
+                    this._logger.LogError($"Consume error: {e.Error.Code}");
+                    this._logger.LogError($"Consume error: {e.Error.ToString()}");
+                    this._logger.LogError($"Consume error: {e.InnerException}");
+                    this._logger.LogError($"Consume error: {e.Message}");
 
                     if (e.Error.IsFatal)
                     {
