@@ -15,7 +15,13 @@ export class SignalrService {
     this.connection=new signalR.HubConnectionBuilder()
                                 .withUrl("http://localhost:52800/notifications",{accessTokenFactory:()=>token!=null?<string>token:" "})
                                 .build();
-    this.connection.start().then(()=> console.log("Connected to the notifications signalR hub!"))
+    this.connection.start().then(()=>
+    {
+      console.log("Connected to the notifications signalR hub!");
+      this.connection?.on("EventCreatedNotification",(eventArg)=>{
+          alert("Event of interest created: "+eventArg);
+      });
+    })
                            .catch((err)=> console.log("Error while starting connection to the notifications signalR hub: "+err));
   }
 

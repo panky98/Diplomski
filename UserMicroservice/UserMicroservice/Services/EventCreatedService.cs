@@ -8,19 +8,27 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Models.EventMicroservice;
 using Confluent.SchemaRegistry.Serdes;
+using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
+using ServiceStack.Redis;
 
 namespace UserMicroservice.Services
 {
     public class EventCreatedService : BackgroundService
     {
 
-        public EventCreatedService(ILogger<EventCreatedService> logger)
+        public EventCreatedService(ILogger<EventCreatedService> logger,
+                                   IHubContext<NotificationsHub> hubContext)
         {
             _logger = logger;
+            _hubContext = hubContext;            
         }
 
         private readonly ILogger<EventCreatedService> _logger;
-        private IConsumer<Null,Event> _consumer;
+        private IConsumer<Null, EventDTO> _consumer;
+        private readonly IHubContext<NotificationsHub> _hubContext;
+        readonly RedisClient _redisClient = new RedisClient("redis-api", 6379);
+
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -33,8 +41,8 @@ namespace UserMicroservice.Services
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            this._consumer = new ConsumerBuilder<Null, Event>(config)
-                                    .SetValueDeserializer(new JsonDeserializer<Event>().AsSyncOverAsync())
+            this._consumer = new ConsumerBuilder<Null, EventDTO>(config)
+                                    .SetValueDeserializer(new JsonDeserializer<EventDTO>().AsSyncOverAsync())
                                     .Build();
 
             _logger.LogInformation("EventCreatedService is trying to connect to event-created topic!");
@@ -61,10 +69,38 @@ namespace UserMicroservice.Services
                 try
                 {
                     var cr = this._consumer.Consume(cancellationToken);
+                    this._logger.LogInformation($"Received from {cr.Topic}: {cr.Message.Key}: {cr.Message.Value.Name}");
+                    this._logger.LogInformation($"Connected status to redis: {_redisClient.HasConnected}");
 
-                    // Handle message...
+                    string creatorConnectionId = string.Empty;
+                    if (_redisClient.HashContainsEntry("allActiveUsers",cr.Message.Value.CreatorId.ToString()))
+                    {
+                        creatorConnectionId=_redisClient.GetValueFromHash("allActiveUsers", cr.Message.Value.CreatorId.ToString());
+                    }
+                    this._logger.LogInformation($"Connected status to redis: {_redisClient.HasConnected} - creatorOfEventId: {creatorConnectionId}");
 
-                    this._logger.LogInformation($"Received: {cr.Message.Key}: {cr.Message.Value.Code}ms");
+
+                    //send to all users which are active and which are interested in event's interests(categories)
+                    IList<string> coveredContextIds = new List<string>();
+                    _logger.LogInformation($"Sending notifications to active users for {cr.Message.Value.InterestIds.Count} different interest categories");
+                    foreach (var interestId in cr.Message.Value.InterestIds)
+                    {
+                        IList<string> members = _redisClient.GetAllItemsFromList("interest:" + interestId);
+                        _logger.LogInformation($"Gathered connectionIds for interest with id {interestId} amount:{members?.Count} ");
+
+                        if (members!=null)
+                        {
+                            foreach(var member in members)
+                            {
+                                if(!coveredContextIds.Contains(member) && member!=creatorConnectionId)
+                                {
+                                    coveredContextIds.Add(member);
+                                    _hubContext.Clients.Client(member).SendAsync("EventCreatedNotification", cr.Message.Value);
+                                    _logger.LogInformation($"Sended notification to user with ContextId: {member}");
+                                }
+                            }
+                        }
+                    }
                 }
                 catch (OperationCanceledException)
                 {

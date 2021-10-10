@@ -12,11 +12,11 @@ export class EventsListComponent implements OnInit,OnDestroy {
 
   }
   ngOnDestroy(): void {
+    console.log("ngOnDestroy called!");
     this.signalRService.disconnect();
   }
 
   ngOnInit(): void {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
   }
-
 }

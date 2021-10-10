@@ -12,6 +12,11 @@ using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using System;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventMicroservice.Controllers
 {
@@ -19,7 +24,8 @@ namespace EventMicroservice.Controllers
     [ApiController]
     public class EventsController : Controller
     {
-        public EventsController(DatabaseClient databaseClient,ILogger<EventsController> logger)
+        public EventsController(DatabaseClient databaseClient,
+                                ILogger<EventsController> logger)
         {
             this._databaseClient = databaseClient;
             this._logger = logger;
@@ -36,13 +42,20 @@ namespace EventMicroservice.Controllers
             return Ok(retList);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOne([FromBody] EventDTO newEventFromBody)
         {
 
             _logger.LogInformation("Creating new event");
+            var identity = (ClaimsIdentity)HttpContext.User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            Claim idClaim = Enumerable.ElementAt<Claim>(claims, 2);
+
+
             var newEvent = new Event()
             {
+                CreatorId=Int32.Parse(idClaim.Value),
                 Name=newEventFromBody.Name,
                 InterestIds=newEventFromBody.InterestIds,
                 DateTimeOfEvent=newEventFromBody.DateTimeOfEvent,
@@ -51,6 +64,8 @@ namespace EventMicroservice.Controllers
 
 
             newEvent.Code = GetHashString(newEvent.Name);
+            newEventFromBody.Code = newEvent.Code;
+            newEventFromBody.CreatorId = newEvent.CreatorId;
             _logger.LogInformation($"New event's code: {newEvent.Code}");
 
 
@@ -71,17 +86,16 @@ namespace EventMicroservice.Controllers
                 // schema.registry.url property for redundancy (comma separated list). 
                 // The property name is not plural to follow the convention set by
                 // the Java implementation.
-                Url = "schema_registry:8081"                
+                Url = "schema_registry:8081"
             };
 
             using (var schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig))
-            using (var producer = new ProducerBuilder<Null, Event>(config)
-                        .SetValueSerializer(new JsonSerializer<Event>(schemaRegistry))
+            using (var producer = new ProducerBuilder<Null, EventDTO>(config)
+                        .SetValueSerializer(new JsonSerializer<EventDTO>(schemaRegistry))
                         .Build())
-            {
-                newEvent.Video = new byte[0];
+            {                
                 _logger.LogInformation($"Sending event-created event to the topic!");
-                await producer.ProduceAsync("event-created", new Message<Null, Event> { Value = newEvent });
+                await producer.ProduceAsync("event-created", new Message<Null, EventDTO> { Value = newEventFromBody });
                 _logger.LogInformation($"Produced event-created event in the topic!");
 
             }
