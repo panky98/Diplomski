@@ -1,16 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {Router} from '@angular/router'
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit,OnDestroy {
 
-  constructor() { }
+  token:string|null;
+  authSubscription:Subscription;
+
+  constructor(private authService:AuthService) {
+    this.token=localStorage.getItem("eventsToken");
+    this.authSubscription=this.authService.loggedIn.subscribe((val:boolean)=>{
+        if(val)
+        {
+          this.token=localStorage.getItem("eventsToken");
+        }
+        else{
+          localStorage.clear();
+          this.token=null;
+        }
+    })
+  }
+  ngOnDestroy(): void {
+    this.authSubscription.unsubscribe();
+  }
 
   ngOnInit(): void {
 
+  }
+
+  logOut(){
+    this.authService.LogOut();
   }
 }

@@ -1,5 +1,7 @@
 <ul>
   <li><a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a></li>
-  <li><a routerLink="login" routerLinkActive="active">Login</a></li>
-  <li><a routerLink="registration" routerLinkActive="active">Regstration</a></li>
+  <li *ngIf="!token"><a routerLink="login" routerLinkActive="active">Login</a></li>
+  <li *ngIf="!token"><a routerLink="registration" routerLinkActive="active">Regstration</a></li>
+  <li *ngIf="token"><a routerLink="events" routerLinkActive="active">Events</a></li>
+  <li *ngIf="token"><a routerLink="" (click)="logOut()">Log out</a></li>
 </ul>

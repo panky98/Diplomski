@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SignalrService } from 'src/app/services/signalr.service';
 
@@ -8,15 +9,20 @@ import { SignalrService } from 'src/app/services/signalr.service';
 })
 export class EventsListComponent implements OnInit,OnDestroy {
 
-  constructor(private signalRService:SignalrService) {
-
+  events:Event[];
+  constructor(private signalRService:SignalrService,
+              private readonly httpClient:HttpClient) {
+    this.events=new Array<Event>();
   }
   ngOnDestroy(): void {
-    console.log("ngOnDestroy called!");
     this.signalRService.disconnect();
   }
 
   ngOnInit(): void {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
+    this.httpClient.get<Event[]>("http://localhost:52801/api/Events").subscribe((response)=>{
+      this.events=response;
+      console.log(this.events);
+    });
   }
 }
