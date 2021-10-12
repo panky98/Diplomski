@@ -1,1 +1,6 @@
 <p>Welcome user!</p>
+
+<p>Events:</p>
+<div *ngFor="let event of events">
+  <app-events-single [event]="event"></app-events-single>
+</div>

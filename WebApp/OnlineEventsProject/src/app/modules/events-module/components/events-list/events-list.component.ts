@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SignalrService } from 'src/app/services/signalr.service';
+import { Event } from 'src/app/models/Event';
 
 @Component({
   selector: 'app-events-list',
@@ -22,7 +23,6 @@ export class EventsListComponent implements OnInit,OnDestroy {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
     this.httpClient.get<Event[]>("http://localhost:52801/api/Events").subscribe((response)=>{
       this.events=response;
-      console.log(this.events);
     });
   }
 }

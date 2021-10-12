@@ -1,0 +1,9 @@
+<div>
+  <p>{{event?.name}}</p>
+  <p>{{event?.dateTimeOfEvent}}</p>
+  <ul>
+    <li *ngFor="let interest of event.interests">
+        {{interest}}
+    </li>
+  </ul>
+</div>

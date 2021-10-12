@@ -53,6 +53,14 @@ namespace EventMicroservice
                 };
             });
 
+            services.AddCors(options => {
+                options.AddPolicy("Corse", builder => {
+                    builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials();
+                });
+            });
 
             services.AddControllers();
             services.AddSingleton<DatabaseClient>();
@@ -67,6 +75,8 @@ namespace EventMicroservice
             }
 
             app.UseRouting();
+
+            app.UseCors("Corse");
 
             app.UseAuthentication();
             app.UseAuthorization();

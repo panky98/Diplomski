@@ -4,4 +4,5 @@ export interface Event{
   name:string;
   dateTimeOfEvent:Date;
   interestIds:number[];
+  interests:string[]
 }

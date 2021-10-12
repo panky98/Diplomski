@@ -28,6 +28,9 @@ namespace Models.EventMicroservice
         [JsonProperty("interestIds")]
         public IList<int> InterestIds { get; set; }
 
+        [JsonProperty("userIds")]
+        public IList<int> userIds { get; set; }
+
         [JsonProperty("video")]
         public byte[] Video { get; set; }
     }

@@ -18,8 +18,10 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace EventMicroservice.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EventsController : Controller
@@ -42,7 +44,6 @@ namespace EventMicroservice.Controllers
             return Ok(retList);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOne([FromBody] EventDTO newEventFromBody)
         {
@@ -55,13 +56,15 @@ namespace EventMicroservice.Controllers
 
             var newEvent = new Event()
             {
-                CreatorId=Int32.Parse(idClaim.Value),
-                Name=newEventFromBody.Name,
-                InterestIds=newEventFromBody.InterestIds,
-                DateTimeOfEvent=newEventFromBody.DateTimeOfEvent,
-                Video=Convert.FromBase64String(newEventFromBody.Base64)
+                CreatorId = Int32.Parse(idClaim.Value),
+                Name = newEventFromBody.Name,
+                InterestIds = newEventFromBody.InterestIds,
+                DateTimeOfEvent = newEventFromBody.DateTimeOfEvent,
+                Video = Convert.FromBase64String(newEventFromBody.Base64),
+                userIds = new List<int>()
             };
 
+            newEvent.userIds.Add(Int32.Parse(idClaim.Value));
 
             newEvent.Code = GetHashString(newEvent.Name);
             newEventFromBody.Code = newEvent.Code;
@@ -103,6 +106,13 @@ namespace EventMicroservice.Controllers
             return Ok(newEvent);
         }
 
+        [HttpDelete]
+        [Route("DeleteAll")]
+        public async Task<IActionResult> DeleteAll()
+        {
+            var collection =await _databaseClient.MongoDatabase.GetCollection<Event>("events-collection").DeleteManyAsync(x => true);
+            return Ok();
+        }
 
         private byte[] GetHash(string inputString)
         {
