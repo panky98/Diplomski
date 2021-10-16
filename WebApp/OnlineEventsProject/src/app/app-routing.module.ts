@@ -8,7 +8,8 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [{ path: '', component:  HomeComponent},
                         { path: 'login', component:  LoginComponent},
                         { path: 'registration', component:  RegistrationComponent},
-                        { path: "events", loadChildren: () => import("./modules/events-module/events.module").then(m => m.EventsModule),canActivate:[AuthGuard]},
+                        { path: "events", loadChildren: () => import("./modules/events-module/events.module").then(m => m.EventsModule),canActivate:[AuthGuard],data:{'myEvents':false}},
+                        { path: "my-events",loadChildren:()=> import("./modules/events-module/events.module").then(m=>m.EventsModule),canActivate:[AuthGuard],data:{'myEvents':true}},
                         { path: "**", redirectTo: "login" }
                       ];
 

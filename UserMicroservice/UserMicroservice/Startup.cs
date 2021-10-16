@@ -90,7 +90,7 @@ namespace UserMicroservice
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddHostedService<EventCreatedService>();
+            services.AddHostedService<EventService>();
 
             services.AddSignalR();
         }

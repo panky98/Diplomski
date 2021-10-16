@@ -1,4 +1,4 @@
-<div>
+<div style="background-color: blue;margin: 10px;">
   <p>{{event?.name}}</p>
   <p>{{event?.dateTimeOfEvent}}</p>
   <ul>
@@ -6,4 +6,7 @@
         {{interest}}
     </li>
   </ul>
+  <button *ngIf="!myEvent" style="background-color: red;" (click)="onSubscribe()">Subscribe</button>
+  <button *ngIf="myEvent" style="background-color: red;" (click)="onUnsubscribe()">Unsubscribe</button>
+
 </div>

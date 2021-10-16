@@ -34,14 +34,33 @@ namespace UserMicroservice.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOne([FromBody]User newUser)
+        public IActionResult AddOne([FromBody]UserCreator newUserCreator)
         {
-            newUser.Password = Models.UserMicroservice.User.HashPassword(newUser.Password);
-            if (_unitOfWork.Users.FindOneByExpression(x => x.Username == newUser.Username) != null)
+            newUserCreator.Password = Models.UserMicroservice.User.HashPassword(newUserCreator.Password);
+            if (_unitOfWork.Users.FindOneByExpression(x => x.Username == newUserCreator.Username) != null)
                 return BadRequest("Username already exists!");
+
+            var newUser = new User()
+            {
+                Name = newUserCreator.Name,
+                Password = newUserCreator.Password,
+                Surname = newUserCreator.Surname,
+                PhoneNumber = newUserCreator.PhoneNumber,
+                Username = newUserCreator.Username
+            };
 
 
             _unitOfWork.Users.Add(newUser);
+            _unitOfWork.Commit();
+
+            if (newUserCreator.InterestsByUser!=null && newUserCreator.InterestsByUser.Count > 0)
+            {
+                foreach(var interest in newUserCreator.InterestsByUser)
+                {
+                    _unitOfWork.InterestsByUsers.AddOneByUserIdAndInterestId(newUser.Id, interest);
+                }
+            }
+
             _unitOfWork.Commit();
             return new OkResult();
         }

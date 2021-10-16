@@ -1,20 +1,24 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {AccordionModule} from 'primeng/accordion';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu-component/menu.component';
 import { LoginComponent } from './components/login-component/login.component';
 import { HomeComponent } from './components/home-component/home-component.component';
 import { RegistrationComponent } from './components/registration-component/registration-component.component';
-import {InputTextModule} from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import {MultiSelectModule} from 'primeng/multiselect';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-
-
-
+import {MultiSelectModule} from 'primeng/multiselect';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import {TabViewModule} from 'primeng/tabview';
+import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import {AccordionModule} from 'primeng/accordion'
 
 @NgModule({
   declarations: [
@@ -27,11 +31,18 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AccordionModule,
-    InputTextModule,
     FormsModule,
+    HttpClientModule,
     MultiSelectModule,
-    HttpClientModule
+    ButtonModule,
+    TooltipModule,
+    RadioButtonModule,
+    AutoCompleteModule,
+    InputSwitchModule,
+    TabViewModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    AccordionModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}

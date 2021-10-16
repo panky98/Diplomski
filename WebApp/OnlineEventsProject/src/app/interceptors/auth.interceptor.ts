@@ -23,6 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request.clone({headers:request.headers.append("Authorization","Bearer "+localStorage.getItem("eventsToken"))})).pipe(catchError((error:HttpErrorResponse)=>{
       if(error.status===401)
       {
+        console.log("LALALALA");
         this.authService.LogOut();
       }
       return throwError(error);

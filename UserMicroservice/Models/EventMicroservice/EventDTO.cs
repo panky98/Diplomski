@@ -21,5 +21,7 @@ namespace Models.EventMicroservice
         [JsonIgnore]
         [JsonProperty("base64")]
         public string Base64 { get; set; }
+
+        public IList<int> UserIds { get; set; }
     }
 }

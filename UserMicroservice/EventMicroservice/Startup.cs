@@ -64,6 +64,7 @@ namespace EventMicroservice
 
             services.AddControllers();
             services.AddSingleton<DatabaseClient>();
+            services.AddHostedService<StartingEventService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
