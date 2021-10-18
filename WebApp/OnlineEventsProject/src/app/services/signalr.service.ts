@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from "@microsoft/signalr"
+import { ToastrService } from 'ngx-toastr';
 import { EventCreated } from '../models/EventCreated';
 import { AuthService } from './auth.service';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ export class SignalrService {
   private connection:signalR.HubConnection | undefined;
 
   constructor(private readonly router:Router,
-              private readonly authService:AuthService) {
+              private readonly authService:AuthService,
+              private toastr:ToastrService,
+              private readonly dataService:DataService) {
   }
 
   connect(token:string | null)
@@ -23,7 +27,14 @@ export class SignalrService {
     {
       console.log("Connected to the notifications signalR hub!");
       this.connection?.on("EventCreatedNotification",(eventArg:EventCreated)=>{
-          alert("Event of interest created: "+eventArg.code);
+          let message:string=eventArg.name +"\n" + eventArg.dateTimeOfEvent+"\n";
+          eventArg.interestIds.forEach((idInterest)=>{
+            message+=this.dataService.getInterests().find(x=>x.id==idInterest)?.name+"\n";
+          })
+          this.toastr.info(message,"Event of interest created");
+      });
+      this.connection?.on("EventStartedNotification",(arg)=>{
+        this.toastr.info(arg,"Event is starting");
       });
     })
                             .catch((err)=>{

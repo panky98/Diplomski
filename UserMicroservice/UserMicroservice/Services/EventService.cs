@@ -118,7 +118,6 @@ namespace UserMicroservice.Services
                             }
                         }
                     }
-
                 }
                 catch (OperationCanceledException)
                 {

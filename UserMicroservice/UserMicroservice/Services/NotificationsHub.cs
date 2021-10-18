@@ -23,11 +23,6 @@ namespace UserMicroservice.Services
             this._unitOfWork = unitOfWork;
             this._logger = logger;
         }
-
-        public async Task EventCreated()
-        {
-
-        }
         public override Task OnConnectedAsync()
         {
             var identity = (ClaimsIdentity)Context.User.Identity;

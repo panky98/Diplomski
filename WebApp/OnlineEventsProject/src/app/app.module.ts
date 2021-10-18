@@ -19,6 +19,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {AccordionModule} from 'primeng/accordion'
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {AccordionModule} from 'primeng/accordion'
     TabViewModule,
     CommonModule,
     BrowserAnimationsModule,
-    AccordionModule
+    AccordionModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}

@@ -46,6 +46,7 @@ namespace EventMicroservice.Controllers
             var retList=await collection.Find(x => true).ToListAsync();
 
             retList = retList.Where(x => x.userIds != null && !x.userIds.Contains(id)).ToList();
+            retList = retList.Where(x => x.DateTimeOfEvent > DateTime.Now.AddHours(2)).ToList();
 
             return Ok(retList);
         }
@@ -192,6 +193,8 @@ namespace EventMicroservice.Controllers
 
             var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
             var list=(await collection.FindAsync(x => x.userIds != null && x.userIds.Contains(id))).ToList();
+            list = list.Where(x => x.DateTimeOfEvent.AddHours(1) > DateTime.Now.AddHours(2)).ToList();
+
             return Ok(list);
         }
 

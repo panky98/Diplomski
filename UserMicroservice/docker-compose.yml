@@ -105,3 +105,10 @@ services:
         timeout: 10s
         retries: 3
     restart: unless-stopped
+
+  streamingmicroservice:
+    image: ${DOCKER_REGISTRY-}streamingmicroservice
+    build:
+      context: .
+      dockerfile: StreamingMicroservice/Dockerfile
+
