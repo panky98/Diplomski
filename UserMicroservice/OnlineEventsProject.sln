@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMicroservice", "EventM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{573C4CF2-33BA-47FC-A978-57FBE9B77FE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamingMicroservice", "StreamingMicroservice\StreamingMicroservice.csproj", "{F8B59684-DB9D-4258-8AFD-6BFE9818AA8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamingMicroservice", "StreamingMicroservice\StreamingMicroservice.csproj", "{C3C57670-6C80-42C8-AD26-B71E246BE68A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{573C4CF2-33BA-47FC-A978-57FBE9B77FE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{573C4CF2-33BA-47FC-A978-57FBE9B77FE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{573C4CF2-33BA-47FC-A978-57FBE9B77FE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8B59684-DB9D-4258-8AFD-6BFE9818AA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8B59684-DB9D-4258-8AFD-6BFE9818AA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8B59684-DB9D-4258-8AFD-6BFE9818AA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8B59684-DB9D-4258-8AFD-6BFE9818AA8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Microsoft.Extensions.Logging;
+using Models.EventMicroservice;
+using ServiceStack.Redis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Confluent.Kafka;
-using Confluent.Kafka.SyncOverAsync;
-using Confluent.SchemaRegistry;
-using Models.EventMicroservice;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace StreamingMicroservice
 {
@@ -16,23 +17,29 @@ namespace StreamingMicroservice
     {
         private Confluent.Kafka.IConsumer<Confluent.Kafka.Null, Models.EventMicroservice.EventDTO> _consumer;
 
-        public EventStartedService(ILogger<EventStartedService> logger)
+        public EventStartedService(ILogger<EventStartedService> logger,
+                                   IHttpClientFactory httpClientFactory)
         {
             this._logger = logger;
+            this._httpClientFactory = httpClientFactory;
         }
 
         private readonly ILogger<EventStartedService> _logger;
-
+        private readonly IHttpClientFactory _httpClientFactory;
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("EventStartedService has started executing!");
 
-            var config = new Confluent.Kafka.ConsumerConfig
+            var config = new ConsumerConfig
             {
                 BootstrapServers = "broker:9092",
-                GroupId = "myGroup",
-                AutoOffsetReset = Confluent.Kafka.AutoOffsetReset.Earliest
+                GroupId = "streaminGroup",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                FetchMaxBytes = 15728640,
+                MessageCopyMaxBytes = 15728640,
+                ReceiveMessageMaxBytes = 15728640+513,
+                MessageMaxBytes = 15728640
             };
 
             this._consumer = new Confluent.Kafka.ConsumerBuilder<Confluent.Kafka.Null, Models.EventMicroservice.EventDTO>(config)
@@ -40,17 +47,17 @@ namespace StreamingMicroservice
                                     .Build();
 
             _logger.LogInformation("EventStartedService is trying to connect to topics!");
-            this._consumer.Subscribe(new List<string>() { "event-started" });
+            this._consumer.Subscribe("event-started");
 
             while (!stoppingToken.IsCancellationRequested && (this._consumer.Subscription == null || this._consumer.Subscription.Count < 1))
             {
                 Task.Delay(500);
-                this._consumer.Subscribe(new List<string>() { "event-started" });
+                this._consumer.Subscribe("event-started");
                 _logger.LogInformation("EventStartedService is trying to connect to topics!");
             }
 
             _logger.LogInformation("EventStartedService has subscribed to topics!");
-            new Thread(() => StartConsumerLoop(stoppingToken)).Start();
+            new Thread(() =>StartConsumerLoop(stoppingToken)).Start();
 
             return Task.CompletedTask;
         }
@@ -62,12 +69,27 @@ namespace StreamingMicroservice
             {
                 try
                 {
-                    var cr = this._consumer.Consume(cancellationToken);                    
+                    var cr = this._consumer.Consume(cancellationToken);
                     this._logger.LogInformation($"Received from {cr.Topic}: {cr.Message.Key}: {cr.Message.Value.Name}");
+                    var receivedMessage = cr.Message.Value;
+                    this._logger.LogInformation($"Event with code {receivedMessage.Code} has just started!");
 
-                    var task = new Task(delegate { TaskMethod(cr.Message.Value.Code, cr.Message.Value.Base64); });
-                    task.Start();
-                    
+                    //after received event-started get bytes of the event and persist them in the cache for streaming
+                    //after stream ends - remove from cache
+                    var httpClient = _httpClientFactory.CreateClient();
+                    this._logger.LogInformation($"Trying to get bytes of the event with code {receivedMessage.Code}");
+                    var responseTask = httpClient.GetAsync($"http://eventmicroservice/api/Events/{receivedMessage.Code}");
+                    var response = responseTask.GetAwaiter().GetResult();
+
+                    if(response.StatusCode==System.Net.HttpStatusCode.NotFound)
+                        this._logger.LogInformation($"Can't find event with code {receivedMessage.Code}");
+
+                    var receivedBytesTask = response.Content.ReadAsByteArrayAsync();
+                    var bytes= receivedBytesTask.GetAwaiter().GetResult();
+
+                    RedisClient redis = new RedisClient("redis-cache", 6379);
+                    redis.Add<byte[]>(receivedMessage.Code, bytes);
+                    this._logger.LogInformation($"Bytes persisted for the event with {receivedMessage.Code}");
                 }
                 catch (OperationCanceledException)
                 {
@@ -94,22 +116,7 @@ namespace StreamingMicroservice
                     break;
                 }
             }
-        }
-
-        private async Task TaskMethod(string code,string base64)
-        {
-            var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:52802/streaming").Build();
-            await connection.StartAsync();
-            await connection.SendAsync("SendByte", ReadByte(Convert.FromBase64String(base64)),code);
-        }
-
-        private async IAsyncEnumerable<byte> ReadByte(byte[] array)
-        {
-            foreach(var el in array)
-            {
-                yield return el;
-            }
+            _logger.LogInformation("CancelationToken requested for EventStartedService!");
         }
     }
 }

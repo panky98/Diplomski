@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,19 +26,8 @@ namespace StreamingMicroservice
         {
 
             services.AddControllers();
-
-            services.AddCors(options => {
-                options.AddPolicy("Corse", builder => {
-                    builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .WithOrigins("http://localhost:4200")
-                    .AllowCredentials();
-                });
-            });
-
+            services.AddHttpClient();
             services.AddHostedService<EventStartedService>();
-
-            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,19 +38,13 @@ namespace StreamingMicroservice
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseCors("Corse");
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<StreamingHub>("/streaming");
-
             });
         }
     }

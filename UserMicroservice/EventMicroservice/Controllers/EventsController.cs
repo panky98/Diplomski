@@ -15,10 +15,8 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace EventMicroservice.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EventsController : Controller
@@ -33,6 +31,7 @@ namespace EventMicroservice.Controllers
         private readonly DatabaseClient _databaseClient;
         private readonly ILogger<EventsController> _logger;
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -46,11 +45,60 @@ namespace EventMicroservice.Controllers
             var retList=await collection.Find(x => true).ToListAsync();
 
             retList = retList.Where(x => x.userIds != null && !x.userIds.Contains(id)).ToList();
-            retList = retList.Where(x => x.DateTimeOfEvent > DateTime.Now.AddHours(2)).ToList();
+            retList = retList.Where(x => x.DateTimeOfEvent > DateTime.Now.AddHours(1)).ToList();
 
             return Ok(retList);
         }
+        
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode([FromRoute(Name ="code")] string code)
+        {
+            _logger.LogInformation($"Requesting bytes for the event with code {code}");            
 
+            var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
+            var retList = await collection.Find(x => x.Code==code).ToListAsync();
+
+            var first = retList.FirstOrDefault();
+
+            if (first == null)
+            {
+                _logger.LogInformation($"Event with code {code} does not exist");
+                return NotFound();
+            }
+
+            return Ok(first.Video);
+        }
+
+        [HttpGet("{code}/Check")]
+        public async Task<IActionResult> CheckEvent([FromRoute(Name = "code")] string code)
+        {
+            _logger.LogInformation($"Requesting check for the event with code {code}");
+
+            var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
+            var retList = await collection.Find(x => x.Code == code).ToListAsync();
+
+            var first = retList.FirstOrDefault();
+
+            if (first == null)
+            {
+                _logger.LogInformation($"Event with code {code} does not exist");
+                return NotFound();
+            }
+
+            var now = DateTime.Now;
+
+            var firstStartTime = first.DateTimeOfEvent;
+            var video= first.Video;
+
+            //check if video is still available
+            //all videos are available just one hour
+            if (firstStartTime.AddHours(1) < now)
+                return Ok();
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOne([FromBody] EventDTO newEventFromBody)
         {
@@ -90,7 +138,10 @@ namespace EventMicroservice.Controllers
 
             var config = new ProducerConfig
             {
-                BootstrapServers = "broker:9092"                
+                BootstrapServers = "broker:9092",                
+                MessageCopyMaxBytes = 15728640,
+                ReceiveMessageMaxBytes = 15728640,
+                MessageMaxBytes= 15728640,
             };
 
             var schemaRegistryConfig = new SchemaRegistryConfig
@@ -116,6 +167,7 @@ namespace EventMicroservice.Controllers
             return Ok(newEvent);
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("DeleteAll")]
         public async Task<IActionResult> DeleteAll()
@@ -124,7 +176,7 @@ namespace EventMicroservice.Controllers
             return Ok();
         }
 
-
+        [Authorize]
         [HttpPost]
         [Route("SubscribeToEvent")]
         public async Task<IActionResult> SubscribeToEvent(string code)
@@ -150,7 +202,7 @@ namespace EventMicroservice.Controllers
             return Ok();
         }
 
-
+        [Authorize]
         [HttpPost]
         [Route("UnsubscribeToEvent")]
         public async Task<IActionResult> UnsubscribeToEvent(string code)
@@ -181,6 +233,7 @@ namespace EventMicroservice.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetMyEvents")]
         public async Task<IActionResult> GetMyEvents()

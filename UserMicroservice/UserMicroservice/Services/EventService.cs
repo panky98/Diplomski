@@ -37,8 +37,12 @@ namespace UserMicroservice.Services
             var config = new ConsumerConfig
             {
                 BootstrapServers = "broker:9092",
-                GroupId = "myGroup",
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                GroupId = "userGroup",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                FetchMaxBytes= 15728640,
+                MessageCopyMaxBytes= 15728640,
+                ReceiveMessageMaxBytes= 15728640+513,
+                MessageMaxBytes= 15728640                
             };
 
             this._consumer = new ConsumerBuilder<Null, EventDTO>(config)

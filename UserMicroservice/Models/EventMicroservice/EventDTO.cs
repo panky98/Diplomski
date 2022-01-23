@@ -18,7 +18,6 @@ namespace Models.EventMicroservice
         public DateTime DateTimeOfEvent { get; set; }
         [JsonProperty("interestIds")]
         public IList<int> InterestIds { get; set; }
-        [JsonIgnore]
         [JsonProperty("base64")]
         public string Base64 { get; set; }
 

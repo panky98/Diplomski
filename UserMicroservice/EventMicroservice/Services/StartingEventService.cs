@@ -37,17 +37,17 @@ namespace EventMicroservice.Services
 
         private async void DoWork(object state)
         {
-            var dateTimeNow = DateTime.Now;
-            dateTimeNow = dateTimeNow.AddHours(2);
+            DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
+                            DateTime.UtcNow, "Europe/Belgrade");
 
-            _logger.LogInformation(dateTimeNow.ToString()+" - StartingEventServiceIsExecuting!");
+            _logger.LogInformation(dateTimeNow.ToString() + " - StartingEventServiceIsExecuting!");
 
             var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
 
-            var filter=Builders<Event>.Filter.Where(x=>true);
+            var filter = Builders<Event>.Filter.Where(x => true);
 
 
-            var list=await collection.Find<Event>(filter).ToListAsync();
+            var list = await collection.Find<Event>(filter).ToListAsync();
 
             list = list.Where(x => x.DateTimeOfEvent.Minute == dateTimeNow.Minute && x.DateTimeOfEvent.Hour == dateTimeNow.Hour && x.DateTimeOfEvent.Day == dateTimeNow.Day
                                                                                   && x.DateTimeOfEvent.Month == dateTimeNow.Month && x.DateTimeOfEvent.Year == dateTimeNow.Year).ToList();
@@ -56,12 +56,16 @@ namespace EventMicroservice.Services
                 var newEventStarted = new EventDTO()
                 {
                     Name = eventStarting.Name,
-                    UserIds = eventStarting.userIds
+                    UserIds = eventStarting.userIds,
+                    Code = eventStarting.Code
                 };
 
                 var config = new ProducerConfig
                 {
-                    BootstrapServers = "broker:9092"
+                    BootstrapServers = "broker:9092",
+                    MessageCopyMaxBytes = 15728640,
+                    ReceiveMessageMaxBytes = 15728640,
+                    MessageMaxBytes = 15728640,
                 };
 
                 var schemaRegistryConfig = new SchemaRegistryConfig
