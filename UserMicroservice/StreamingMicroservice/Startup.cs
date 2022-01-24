@@ -24,6 +24,14 @@ namespace StreamingMicroservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => {
+                options.AddPolicy("Corse", builder => {
+                    builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials();
+                });
+            });
 
             services.AddControllers();
             services.AddHttpClient();
@@ -39,6 +47,8 @@ namespace StreamingMicroservice
             }
 
             app.UseRouting();
+
+            app.UseCors("Corse");
 
             app.UseAuthorization();
 

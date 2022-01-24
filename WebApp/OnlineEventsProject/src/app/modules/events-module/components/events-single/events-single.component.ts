@@ -10,6 +10,8 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class EventsSingleComponent implements OnInit {
 
+  currentDate:Date=new Date();
+
   @Input("event") event!:Event;
   @Input("myEvent") myEvent:boolean|undefined;
 
@@ -24,6 +26,11 @@ export class EventsSingleComponent implements OnInit {
     for(let interestId of this.event.interestIds){
       this.event.interests.push(<string>(this.dataService.interests.find(x=>x.id==interestId)?.name));
     }
+
+    this.event.dateTimeOfEvent=new Date(this.event.dateTimeOfEvent);
+    this.event.dateTimeOfEvent=new Date(this.event.dateTimeOfEvent.getFullYear(),this.event.dateTimeOfEvent.getMonth(),this.event.dateTimeOfEvent.getDate(),
+                                        this.event.dateTimeOfEvent.getHours()-1,this.event.dateTimeOfEvent.getMinutes(),this.event.dateTimeOfEvent.getSeconds());
+
   }
 
   onSubscribe():void{
@@ -36,5 +43,11 @@ export class EventsSingleComponent implements OnInit {
       this.httpClient.post("http://localhost:52801/api/Events/UnsubscribeToEvent?code="+this.event.code,null).subscribe((response)=>{
         this.router.navigate(["events"]);
       },(error)=>{console.log(error)});
+  }
+
+  onPlay() : void{
+    console.log(this.event.dateTimeOfEvent<this.currentDate);
+    console.log(this.currentDate);
+    console.log(this.event.dateTimeOfEvent);
   }
 }

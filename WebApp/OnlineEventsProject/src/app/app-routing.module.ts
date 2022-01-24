@@ -10,6 +10,7 @@ const routes: Routes = [{ path: '', component:  HomeComponent},
                         { path: 'registration', component:  RegistrationComponent},
                         { path: "events", loadChildren: () => import("./modules/events-module/events.module").then(m => m.EventsModule),canActivate:[AuthGuard],data:{'myEvents':false}},
                         { path: "my-events",loadChildren:()=> import("./modules/events-module/events.module").then(m=>m.EventsModule),canActivate:[AuthGuard],data:{'myEvents':true}},
+                        { path: "event",loadChildren:()=> import("./modules/streaming/streaming.module").then(m=>m.StreamingModule),canActivate:[AuthGuard]},
                         { path: "**", redirectTo: "login" }
                       ];
 

@@ -45,7 +45,9 @@ namespace EventMicroservice.Controllers
             var retList=await collection.Find(x => true).ToListAsync();
 
             retList = retList.Where(x => x.userIds != null && !x.userIds.Contains(id)).ToList();
-            retList = retList.Where(x => x.DateTimeOfEvent > DateTime.Now.AddHours(1)).ToList();
+            DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
+                    DateTime.UtcNow, "Europe/Belgrade");
+            retList = retList.Where(x => x.DateTimeOfEvent > dateTimeNow).ToList();
 
             return Ok(retList);
         }
@@ -85,14 +87,15 @@ namespace EventMicroservice.Controllers
                 return NotFound();
             }
 
-            var now = DateTime.Now;
+            DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
+                    DateTime.UtcNow, "Europe/Belgrade");
 
             var firstStartTime = first.DateTimeOfEvent;
             var video= first.Video;
 
             //check if video is still available
             //all videos are available just one hour
-            if (firstStartTime.AddHours(1) < now)
+            if (firstStartTime.AddHours(2) >= dateTimeNow)
                 return Ok();
 
             return NoContent();
@@ -246,7 +249,9 @@ namespace EventMicroservice.Controllers
 
             var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
             var list=(await collection.FindAsync(x => x.userIds != null && x.userIds.Contains(id))).ToList();
-            list = list.Where(x => x.DateTimeOfEvent.AddHours(1) > DateTime.Now.AddHours(2)).ToList();
+            DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
+                DateTime.UtcNow, "Europe/Belgrade");
+            list = list.Where(x => x.DateTimeOfEvent.AddHours(2) > dateTimeNow).ToList();
 
             return Ok(list);
         }

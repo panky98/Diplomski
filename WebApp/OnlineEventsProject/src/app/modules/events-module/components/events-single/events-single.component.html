@@ -8,5 +8,5 @@
   </ul>
   <button *ngIf="!myEvent" style="background-color: red;" (click)="onSubscribe()">Subscribe</button>
   <button *ngIf="myEvent" style="background-color: red;" (click)="onUnsubscribe()">Unsubscribe</button>
-
+  <a *ngIf="event.dateTimeOfEvent < currentDate" [routerLink]="['/event',event.code]">  <button *ngIf="myEvent" style="background-color: red;">Play</button></a>
 </div>

@@ -1,0 +1,20 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-play-event',
+  templateUrl: './play-event.component.html',
+  styleUrls: ['./play-event.component.scss']
+})
+export class PlayEventComponent implements OnInit {
+  
+  eventCode:string;
+
+  constructor(private _Activatedroute:ActivatedRoute) { 
+    this.eventCode=<string>this._Activatedroute.snapshot.paramMap.get("code");
+  }
+
+  ngOnInit(): void {
+  }
+
+}

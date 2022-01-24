@@ -20,6 +20,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {AccordionModule} from 'primeng/accordion'
 import { ToastrModule } from 'ngx-toastr';
+import { StreamingModule } from './modules/streaming/streaming.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ToastrModule } from 'ngx-toastr';
     CommonModule,
     BrowserAnimationsModule,
     AccordionModule,
+    StreamingModule,
     ToastrModule.forRoot()
   ],
   providers: [
