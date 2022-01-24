@@ -37,7 +37,6 @@
     "videogular-overlay-play": "^1.4.4",
     "videogular-poster": "^1.4.4",
     "videogular-themes-default": "^1.4.4",
-    "videogular2": "^7.0.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
