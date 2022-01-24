@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^12.2.15",
     "@angular/router": "^12.2.15",
     "@microsoft/signalr": "^5.0.13",
-    "@videogular/ngx-videogular": "^2.0.0",
+    "@videogular/ngx-videogular": "^5.0.1",
     "@vime/angular": "^5.3.1",
     "@vime/core": "^5.3.1",
     "mat-video": "^2.8.1",
