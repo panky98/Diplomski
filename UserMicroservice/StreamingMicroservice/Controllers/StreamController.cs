@@ -57,7 +57,7 @@ namespace StreamingMicroservice.Controllers
             _logger.LogInformation($"Streaming {bytes.Count()} number of bytes!");
             var stream = new MemoryStream(bytes);
 
-            return new FileStreamResult(stream, "video/mp4");
+            return File(stream, "video/mp4", enableRangeProcessing:true);
         }
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { VgPlayerComponent } from '@videogular/ngx-videogular/core';
 import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
@@ -19,5 +20,4 @@ export class PlayEventComponent implements OnInit {
   ngOnInit(): void {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
   }
-
 }

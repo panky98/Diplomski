@@ -20,7 +20,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {AccordionModule} from 'primeng/accordion'
 import { ToastrModule } from 'ngx-toastr';
-import { StreamingModule } from './modules/streaming/streaming.module';
+import { VimeModule } from '@vime/angular';
 
 @NgModule({
   declarations: [
@@ -45,11 +45,11 @@ import { StreamingModule } from './modules/streaming/streaming.module';
     CommonModule,
     BrowserAnimationsModule,
     AccordionModule,
-    StreamingModule,
+    VimeModule,
     ToastrModule.forRoot()
   ],
   exports:[
-    BrowserModule
+
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}

@@ -23,13 +23,13 @@ export class SignalrService implements OnInit {
   }
 
   ngOnInit(): void {
-    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
-      this.interests=data;
-    })
   }
 
   connect(token:string | null)
   {
+    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+      this.interests=data;
+    })
     if(!this.connection || this.connection.state!='Connected'){
       this.connection=new signalR.HubConnectionBuilder()
                                   .withUrl("http://localhost:52800/notifications",{accessTokenFactory:()=>token!=null?<string>token:" "})

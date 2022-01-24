@@ -35,7 +35,7 @@ namespace EventMicroservice.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            _logger.LogInformation("Subscribing to event");
+            _logger.LogInformation("Gathering all events");
             var identity = (ClaimsIdentity)HttpContext.User.Identity;
             IEnumerable<Claim> claims = identity.Claims;
             Claim idClaim = Enumerable.ElementAt<Claim>(claims, 2);
