@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {Router} from '@angular/router'
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
   selector: 'app-menu',
@@ -13,7 +14,8 @@ export class MenuComponent implements OnInit,OnDestroy {
   token:string|null;
   authSubscription:Subscription;
 
-  constructor(private authService:AuthService) {
+  constructor(private authService:AuthService,
+              private signalRService:SignalrService) {
     this.token=localStorage.getItem("eventsToken");
     this.authSubscription=this.authService.loggedIn.subscribe((val:boolean)=>{
         if(val)
@@ -35,6 +37,7 @@ export class MenuComponent implements OnInit,OnDestroy {
   }
 
   logOut(){
-    this.authService.LogOut();
+    this.signalRService.disconnect();
+    this.authService.LogOut();    
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api/public_api';
 import { NgForm } from '@angular/forms';
-import { DataService } from 'src/app/services/data.service';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { HttpErrorResponse,HttpClient } from '@angular/common/http';
+import { Interest } from 'src/app/models/Interest';
 
 @Component({
   selector: 'app-registration-component',
@@ -18,17 +18,18 @@ export class RegistrationComponent implements OnInit {
 
   @ViewChild('forma') forma:NgForm | undefined;
 
-  constructor(private readonly dataService:DataService,
-              private readonly router:Router,
+  constructor(private readonly router:Router,
               private readonly httpClient:HttpClient) {
     this.selectOptions=[];
-    this.dataService.getInterests().forEach((interest)=>{
-      this.selectOptions.push({label:interest.name,value:interest.id});
-    })
     this.selectedOptions=[];
    }
 
   ngOnInit(): void {
+    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+      data.forEach((interest)=>{
+        this.selectOptions.push({label:interest.name,value:interest.id});
+      });
+    })
   }
 
   onSubmit(){

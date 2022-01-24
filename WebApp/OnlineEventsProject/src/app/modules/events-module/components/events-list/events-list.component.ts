@@ -22,7 +22,7 @@ export class EventsListComponent implements OnInit,OnDestroy {
     this.dataSubscription= route.data.subscribe((data)=>{this.myEvents=data["myEvents"]});
   }
   ngOnDestroy(): void {
-    this.signalRService.disconnect();
+    //this.signalRService.disconnect();
     this.dataSubscription.unsubscribe();
   }
 

@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
-import { DataService } from './services/data.service';
+import { Component, OnDestroy } from '@angular/core';
+import { SignalrService } from './services/signalr.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   title = 'OnlineEventsProject';
 
-  constructor(private readonly dataService:DataService){
+  constructor(private signalRService:SignalrService){
 
+  }
+  ngOnDestroy(): void {
+    this.signalRService.disconnect();
   }
 }

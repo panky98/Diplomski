@@ -48,6 +48,9 @@ import { StreamingModule } from './modules/streaming/streaming.module';
     StreamingModule,
     ToastrModule.forRoot()
   ],
+  exports:[
+    BrowserModule
+  ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}
   ],

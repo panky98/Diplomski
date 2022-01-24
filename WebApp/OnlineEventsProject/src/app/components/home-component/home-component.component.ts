@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
   selector: 'app-home-component',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private signalRService:SignalrService) { }
 
   ngOnInit(): void {
+    if(localStorage.getItem("eventsToken")){
+      this.signalRService.connect(localStorage.getItem("eventsToken"));
+    }
   }
 
 }
