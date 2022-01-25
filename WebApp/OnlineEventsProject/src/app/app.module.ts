@@ -6,21 +6,14 @@ import { MenuComponent } from './components/menu-component/menu.component';
 import { LoginComponent } from './components/login-component/login.component';
 import { HomeComponent } from './components/home-component/home-component.component';
 import { RegistrationComponent } from './components/registration-component/registration-component.component';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
-import {MultiSelectModule} from 'primeng/multiselect';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import {TabViewModule} from 'primeng/tabview';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {AccordionModule} from 'primeng/accordion'
 import { ToastrModule } from 'ngx-toastr';
-import { VimeModule } from '@vime/angular';
+import { PlayEventComponent } from './components/streaming/play-event/play-event.component';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -28,31 +21,21 @@ import { VimeModule } from '@vime/angular';
     MenuComponent,
     LoginComponent,
     HomeComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    PlayEventComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    MultiSelectModule,
-    ButtonModule,
-    TooltipModule,
-    RadioButtonModule,
-    AutoCompleteModule,
+    SharedModule,
     InputSwitchModule,
     TabViewModule,
     CommonModule,
     BrowserAnimationsModule,
     AccordionModule,
-    VimeModule,
     ToastrModule.forRoot()
   ],
-  exports:[
-
-  ],
   providers: [
-    {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}
   ],
   bootstrap: [AppComponent]
 })

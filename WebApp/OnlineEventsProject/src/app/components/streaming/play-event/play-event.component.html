@@ -1,9 +1,11 @@
 <div class="video-player-wrapper">
 
-    <h2>Angular Video Player with Controls Example</h2>  
-    <vm-player #player playsinline (vPlaybackReady)="onPlaybackReady()">
-      <vm-video cross-origin="true" poster="https://media.vimejs.com/poster.png">
-        <source data-src="https://media.vimejs.com/720p.mp4" type="video/mp4" />
-      </vm-video>
-    </vm-player>
+    <h2>Angular Video Player with Controls Example</h2>
+  
+    <div class="video">
+      <video controls (click)="toggleVideo('test')" #videoPlayer>
+        <source [src]="videoUrl" type="video/mp4" />
+        Browser not supported
+      </video>
+    </div>
 </div>

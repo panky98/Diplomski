@@ -1,0 +1,19 @@
+<ngx-spinner
+    [fullScreen]="true"
+    [showSpinner]="isBusy">
+</ngx-spinner>
+<form #forma="ngForm" (submit)="onSubmit()">
+    <label for="nameInput">Name </label><input type="text" pInputText name="name" ngModel required #nameInput="ngModel"/><br/><br/>
+    <label for="interestsInput">Interests </label><br/>
+
+    <p-multiSelect [options]="selectOptions" [(ngModel)]="selectedOptions" defaultLabel="Select interests" name="interests" ngModel #interestsInput="ngModel">
+    </p-multiSelect>
+    <br/><br/>
+    <input type="file" class="file-upload" name="file" ngModel required #fileInput="ngModel" (change)="onChange($event)">
+    <br/><br/>
+
+    <p-calendar [(ngModel)]="dateTime" [showTime]="true" [hourFormat]="'24'" ngModel name="dateTime" #dateTimeInput="ngModel"></p-calendar>
+
+    <br/><br/>
+    <button type="submit" [disabled]="forma.invalid">Register</button>
+  </form>

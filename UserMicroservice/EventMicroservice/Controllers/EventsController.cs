@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace EventMicroservice.Controllers
 {
@@ -118,7 +119,6 @@ namespace EventMicroservice.Controllers
                 Name = newEventFromBody.Name,
                 InterestIds = newEventFromBody.InterestIds,
                 DateTimeOfEvent = newEventFromBody.DateTimeOfEvent,
-                Video = Convert.FromBase64String(newEventFromBody.Base64),
                 userIds = new List<int>()
             };
 
@@ -168,6 +168,46 @@ namespace EventMicroservice.Controllers
             }
 
             return Ok(newEvent);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("{code}/UploadFile")]
+        public async Task<IActionResult> UploadFile([FromRoute(Name = "code")]string code)
+        {
+            var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
+            var eventFromDb = await (await collection.FindAsync(x => x.Code == code)).FirstOrDefaultAsync();
+            if (eventFromDb == null)
+                return NotFound($"Event with code {code} doesn't exist!");
+
+            _logger.LogInformation("Persisting file");
+
+            try
+            {
+                var formCollection = await Request.ReadFormAsync();
+                var file = formCollection.Files[0];
+                _logger.LogInformation($"File found, length: {file.Length}, file name: {file.Name}");
+                using (var memoryStream=new MemoryStream())
+                {
+                    file.CopyTo(memoryStream);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    var bytes=memoryStream.ToArray();
+
+                    //persist to the database
+                    _logger.LogInformation($"Persisting file {file.Name} to the database (number of bytes: {bytes.Count()})");
+
+                    var filter = Builders<Event>.Filter.Eq(x => x.Code,code);
+                    var update = Builders<Event>.Update.Set(x => x.Video, bytes);
+                    collection.UpdateOne(filter, update);
+
+                    return StatusCode(201);
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogInformation($"Error while persisting video: {ex}");
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
 
         [Authorize]
