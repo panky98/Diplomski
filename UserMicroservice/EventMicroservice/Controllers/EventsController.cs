@@ -53,8 +53,8 @@ namespace EventMicroservice.Controllers
             return Ok(retList);
         }
         
-        [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode([FromRoute(Name ="code")] string code)
+        [HttpGet("{code}/File")]
+        public async Task<IActionResult> GetEventFileByCode([FromRoute(Name ="code")] string code)
         {
             _logger.LogInformation($"Requesting bytes for the event with code {code}");            
 
@@ -71,6 +71,28 @@ namespace EventMicroservice.Controllers
 
             _logger.LogInformation($"Returning bytes for the event with code {code}, amount of bytes {first.Video.Count()}");
             return File(first.Video,"video/mp4",enableRangeProcessing:true);
+        }
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetEventByCode([FromRoute(Name = "code")] string code)
+        {
+            _logger.LogInformation($"Requesting data aboutthe event with code {code}");
+
+            var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");
+            var retList = await collection.Find(x => x.Code == code).ToListAsync();
+
+            var first = retList.FirstOrDefault();
+
+            if (first == null)
+            {
+                _logger.LogInformation($"Event with code {code} does not exist");
+                return NotFound();
+            }
+
+            first.Video =new byte[0];//No need to send bytes to the FE
+
+            _logger.LogInformation($"Returning data for the event with code {code}");
+            return Ok(first);
         }
 
         [HttpGet("{code}/Check")]

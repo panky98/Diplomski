@@ -54,7 +54,7 @@ namespace StreamingMicroservice.Controllers
 
             DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Europe/Belgrade");
 
-            else if (dateTimeNow>expirationDateTime)
+            if (dateTimeNow>expirationDateTime)
             {
                 _logger.LogInformation($"Event with code {code} has expired, cleaning redis cache");
                 //clean redis

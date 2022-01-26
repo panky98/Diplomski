@@ -1,9 +1,18 @@
 <div class="video-player-wrapper">
 
-    <h2>Angular Video Player with Controls Example</h2>
+    <h2>Streaming {{event?.name}}</h2>
+
+    <div *ngIf="waitingForStreaming" style="width: 500px; height: 500px;">
+      <p>Waiting for streaming to start </p>
+      <p-progressSpinner style="padding-left: 200px; padding-top: 200px;"></p-progressSpinner>
+    </div>
+
+    <div *ngIf="!waitingForStreaming && !eventAvailable" style="width: 500px; height: 500px;">
+      <p>Event has expired </p>
+    </div>
   
-    <div class="video">
-      <video controls (click)="toggleVideo('test')" #videoPlayer>
+    <div class="video" *ngIf="!waitingForStreaming && eventAvailable">
+      <video controls (click)="toggleVideo('test')" style="width: 500px; height: 500px;" #videoPlayer>
         <source [src]="videoUrl" type="video/mp4" />
         Browser not supported
       </video>

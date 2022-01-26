@@ -47,10 +47,4 @@ export class EventsSingleComponent implements OnInit {
         this.router.navigate(["events"]);
       },(error)=>{console.log(error)});
   }
-
-  onPlay() : void{
-    console.log(this.event.dateTimeOfEvent<this.currentDate);
-    console.log(this.currentDate);
-    console.log(this.event.dateTimeOfEvent);
-  }
 }

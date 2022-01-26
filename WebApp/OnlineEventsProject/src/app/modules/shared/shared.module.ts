@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -10,6 +10,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {CalendarModule} from 'primeng/calendar';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 
 
@@ -27,7 +28,8 @@ import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
     RadioButtonModule,
     AutoCompleteModule,
     NgxSpinnerModule,
-    CalendarModule
+    CalendarModule,
+    ProgressSpinnerModule
   ],
   exports:[
     FormsModule,
@@ -38,10 +40,14 @@ import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
     RadioButtonModule,
     AutoCompleteModule,
     NgxSpinnerModule,
-    CalendarModule
+    CalendarModule,
+    ProgressSpinnerModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi:true}
   ],
+  schemas:[
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class SharedModule { }
