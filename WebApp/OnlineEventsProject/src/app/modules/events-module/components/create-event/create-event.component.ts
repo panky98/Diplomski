@@ -49,6 +49,17 @@ export class CreateEventComponent implements OnInit {
       dateTimeOfEvent: this.forma?.value['dateTime']
     }
 
+    const file= <File>this.file;
+
+    if(file.type!='video/mp4'){
+      this.toastr.error("Only mp4 files are allowed!");
+      return;
+    }
+    else if(file.size>15*1024*1024){
+      this.toastr.error("Maximum allowed file size is 15MB!");
+      return;
+    }
+
     this.isBusy=true;
     this.httpClient.post<EventCreated>("http://localhost:52801/api/Events",newEvent).subscribe(
       (response:EventCreated)=>{

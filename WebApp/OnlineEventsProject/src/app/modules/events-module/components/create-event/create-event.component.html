@@ -9,7 +9,7 @@
     <p-multiSelect [options]="selectOptions" [(ngModel)]="selectedOptions" defaultLabel="Select interests" name="interests" ngModel #interestsInput="ngModel">
     </p-multiSelect>
     <br/><br/>
-    <input type="file" class="file-upload" name="file" ngModel required #fileInput="ngModel" (change)="onChange($event)">
+    <input type="file" accept="video/mp4" class="file-upload" name="file" ngModel required #fileInput="ngModel" (change)="onChange($event)">
     <br/><br/>
 
     <p-calendar [(ngModel)]="dateTime" [showTime]="true" [hourFormat]="'24'" ngModel name="dateTime" #dateTimeInput="ngModel"></p-calendar>

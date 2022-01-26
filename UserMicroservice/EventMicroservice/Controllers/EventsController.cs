@@ -197,6 +197,7 @@ namespace EventMicroservice.Controllers
         }
 
         [Authorize]
+        [DisableRequestSizeLimit]
         [HttpPost]
         [Route("{code}/UploadFile")]
         public async Task<IActionResult> UploadFile([FromRoute(Name = "code")]string code)
@@ -317,6 +318,12 @@ namespace EventMicroservice.Controllers
             var list=(await collection.FindAsync(x => x.userIds != null && x.userIds.Contains(id))).ToList();
             DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
                 DateTime.UtcNow, "Europe/Belgrade");
+
+            foreach (var myEvent in list)//make events begin at the start of the minute
+            {
+                myEvent.DateTimeOfEvent = myEvent.DateTimeOfEvent.AddSeconds(-myEvent.DateTimeOfEvent.Second + 1);
+            }
+
             list = list.Where(x => x.DateTimeOfEvent.AddHours(2) > dateTimeNow).ToList();
 
             return Ok(list);
