@@ -28,19 +28,33 @@ namespace StreamingMicroservice.Controllers
         [HttpGet("{code}")]
         public async Task<IActionResult> Play([FromRoute(Name ="code")] string code)
         {
-            var httpClient = _httpClientFactory.CreateClient();
+            _logger.LogInformation($"Starting streaming for event with code {code}");
 
+            //get file and return it
+            var bytes = redis.GetBytes(code);
+            _logger.LogInformation($"Streaming {bytes.Count()} number of bytes!");
+            var stream = new MemoryStream(bytes);
+
+            return File(stream, "video/mp4", enableRangeProcessing:true);
+        }
+
+        [HttpGet("{code}/Check")]
+        public async Task<IActionResult> Check([FromRoute(Name = "code")] string code)
+        {
             //first check is video still available
             _logger.LogInformation($"Checking if event with code {code} is still available");
-            var response = await httpClient.GetAsync($"http://eventmicroservice/api/Events/{code}/Check");
-            _logger.LogInformation($"Response for event with code {code} collected");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if(!redis.ContainsKey($"EXP_{code}"))
             {
                 _logger.LogInformation($"Event with code {code} not found");
                 return NotFound();
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+
+            var expirationDateTimeString = redis.Get<string>($"EXP_{code}");
+            var expirationDateTime = DateTime.Parse(expirationDateTimeString);
+
+            DateTime dateTimeNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Europe/Belgrade");
+
+            else if (dateTimeNow>expirationDateTime)
             {
                 _logger.LogInformation($"Event with code {code} has expired, cleaning redis cache");
                 //clean redis
@@ -51,13 +65,8 @@ namespace StreamingMicroservice.Controllers
                 return NoContent();
             }
 
-            _logger.LogInformation($"Event with code {code} still available, starting streaming");
-            //get file and return it
-            var bytes = redis.GetBytes(code);
-            _logger.LogInformation($"Streaming {bytes.Count()} number of bytes!");
-            var stream = new MemoryStream(bytes);
-
-            return File(stream, "video/mp4", enableRangeProcessing:true);
+            _logger.LogInformation($"Event with code {code} is still available, returning 200");
+            return Ok();
         }
     }
 }

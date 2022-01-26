@@ -98,7 +98,7 @@ namespace EventMicroservice.Controllers
             //check if video is still available
             //all videos are available just one hour
             if (firstStartTime.AddHours(2) >= dateTimeNow)
-                return Ok();
+                return Ok(firstStartTime.AddHours(2));
 
             return NoContent();
         }

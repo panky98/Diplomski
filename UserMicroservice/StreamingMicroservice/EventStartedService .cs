@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,11 +82,22 @@ namespace StreamingMicroservice
                     //after stream ends - remove from cache
                     var httpClient = _httpClientFactory.CreateClient();
                     this._logger.LogInformation($"Trying to get bytes of the event with code {receivedMessage.Code}");
-                    var fileBytes = await httpClient.GetByteArrayAsync($"http://eventmicroservice/api/Events/{receivedMessage.Code}");
+                    var fileBytes = await httpClient.GetByteArrayAsync($"http://eventmicroservice/api/Events/{receivedMessage.Code}",cancellationToken);
                                    
                     RedisClient redis = new RedisClient("redis-cache", 6379);
-                    this._logger.LogInformation($"LALA Bytes persisted for the event with {receivedMessage.Code}, amount of bytes: {fileBytes.Count()}");
+                    this._logger.LogInformation($"Bytes persisted for the event with {receivedMessage.Code}, amount of bytes: {fileBytes.Count()}");
                     redis.Add<byte[]>(receivedMessage.Code, fileBytes);
+
+                    //collect when event should expire
+                    this._logger.LogInformation($"Collecting expiration DateTime for event with code {receivedMessage.Code}");
+                    var response = await httpClient.GetAsync("http://eventmicroservice/api/Events/{receivedMessage.Code}/Check",cancellationToken);
+
+                    var stream = response.Content.ReadAsStream();
+                    var dateTimeOfEvent=await JsonSerializer.DeserializeAsync<DateTime>(stream, cancellationToken: cancellationToken);
+                    this._logger.LogInformation($"Expiration DateTime for event with code {receivedMessage.Code} is {dateTimeOfEvent.ToString()}");
+
+                    redis.Add<string>($"EXP_{receivedMessage.Code}", dateTimeOfEvent.ToString());
+                    this._logger.LogInformation($"Expiration DateTime for event with code {receivedMessage.Code} persisted into cache");
                 }
                 catch (OperationCanceledException)
                 {
