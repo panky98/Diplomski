@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api/public_api';
 import { Event } from 'src/app/models/Event';
@@ -26,7 +27,8 @@ export class CreateEventComponent implements OnInit {
 
   constructor(private readonly httpClient:HttpClient,
               private signalRService:SignalrService,
-              private toastr:ToastrService) { 
+              private toastr:ToastrService,
+              private router: Router) { 
     this.selectOptions=[];
     this.selectedOptions=[];
   }
@@ -61,6 +63,7 @@ export class CreateEventComponent implements OnInit {
           else if (event.type === HttpEventType.Response) {
             this.isBusy=false;
             this.toastr.info("Upload successfull");
+            this.router.navigate(['my-events']);
           }          
         },(error:HttpErrorResponse)=>{
           this.isBusy=false;

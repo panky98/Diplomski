@@ -69,7 +69,8 @@ namespace EventMicroservice.Controllers
                 return NotFound();
             }
 
-            return Ok(first.Video);
+            _logger.LogInformation($"Returning bytes for the event with code {code}, amount of bytes {first.Video.Count()}");
+            return File(first.Video,"video/mp4",enableRangeProcessing:true);
         }
 
         [HttpGet("{code}/Check")]
@@ -128,6 +129,9 @@ namespace EventMicroservice.Controllers
             newEventFromBody.Code = newEvent.Code;
             newEventFromBody.CreatorId = newEvent.CreatorId;
             _logger.LogInformation($"New event's code: {newEvent.Code}");
+            newEvent.DateTimeOfEvent = newEvent.DateTimeOfEvent.AddHours(1);//so times will be synchronized (time from FE and time in our time zone)
+            _logger.LogInformation($"New event's DateTime: {newEvent.DateTimeOfEvent.ToString()}");
+
 
 
             var collection = _databaseClient.MongoDatabase.GetCollection<Event>("events-collection");

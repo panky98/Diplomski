@@ -57,12 +57,15 @@ namespace StreamingMicroservice
             }
 
             _logger.LogInformation("EventStartedService has subscribed to topics!");
-            new Thread(() =>StartConsumerLoop(stoppingToken)).Start();
+
+#pragma warning disable 
+            new Thread(async () => StartConsumerLoop(stoppingToken)).Start();
+#pragma warning restore
 
             return Task.CompletedTask;
         }
 
-        private void StartConsumerLoop(CancellationToken cancellationToken)
+        private async Task StartConsumerLoop(CancellationToken cancellationToken)
         {
             _logger.LogInformation("EventStartedService has started infinite loop!");
             while (!cancellationToken.IsCancellationRequested)
@@ -78,18 +81,11 @@ namespace StreamingMicroservice
                     //after stream ends - remove from cache
                     var httpClient = _httpClientFactory.CreateClient();
                     this._logger.LogInformation($"Trying to get bytes of the event with code {receivedMessage.Code}");
-                    var responseTask = httpClient.GetAsync($"http://eventmicroservice/api/Events/{receivedMessage.Code}");
-                    var response = responseTask.GetAwaiter().GetResult();
-
-                    if(response.StatusCode==System.Net.HttpStatusCode.NotFound)
-                        this._logger.LogInformation($"Can't find event with code {receivedMessage.Code}");
-
-                    var receivedBytesTask = response.Content.ReadAsByteArrayAsync();
-                    var bytes= receivedBytesTask.GetAwaiter().GetResult();
-
+                    var fileBytes = await httpClient.GetByteArrayAsync($"http://eventmicroservice/api/Events/{receivedMessage.Code}");
+                                   
                     RedisClient redis = new RedisClient("redis-cache", 6379);
-                    redis.Add<byte[]>(receivedMessage.Code, bytes);
-                    this._logger.LogInformation($"Bytes persisted for the event with {receivedMessage.Code}");
+                    this._logger.LogInformation($"LALA Bytes persisted for the event with {receivedMessage.Code}, amount of bytes: {fileBytes.Count()}");
+                    redis.Add<byte[]>(receivedMessage.Code, fileBytes);
                 }
                 catch (OperationCanceledException)
                 {
