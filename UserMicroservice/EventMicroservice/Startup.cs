@@ -64,7 +64,7 @@ namespace EventMicroservice
                 options.AddPolicy("Corse", builder => {
                     builder.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins("http://localhost:4200")
+                    .WithOrigins("http://localhost:4200", "http://eventmicroservice:80", "http://streamingmicroservice:80", "http://usermicroservice:80", "http://apigateway:80")
                     .AllowCredentials();
                 });
             });

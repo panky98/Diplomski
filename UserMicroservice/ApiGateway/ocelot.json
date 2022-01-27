@@ -1,0 +1,211 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Interest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Interest",
+      "UpstreamHttpMethod": [ "GET", "POST", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events",
+      "UpstreamHttpMethod": [ "GET", "POST", "OPTIONS"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/{code}/UploadFile",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/{code}/UploadFile",
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/{code}/File",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/{code}/File",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/{code}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/{code}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/{code}/Check",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/{code}/Check",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/DeleteAll",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/DeleteAll",
+      "UpstreamHttpMethod": [ "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/SubscribeToEvent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/SubscribeToEvent",
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/UnsubscribeToEvent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/UnsubscribeToEvent",
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Events/GetMyEvents",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eventmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Events/GetMyEvents",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Stream/{code}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "streamingmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Stream/{code}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Stream/{code}/Check",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "streamingmicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Stream/{code}/Check",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/User",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/User",
+      "UpstreamHttpMethod": [ "GET", "POST", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/User/LogIn/{username}/{password}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/User/LogIn/{username}/{password}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Interest/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Interest/{id}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/InterestByUser",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/InterestByUser",
+      "UpstreamHttpMethod": [ "POST", "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/InterestByUser/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermicroservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/InterestByUser/{id}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:52803"
+  }
+}

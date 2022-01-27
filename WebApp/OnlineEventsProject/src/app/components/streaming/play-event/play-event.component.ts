@@ -25,7 +25,7 @@ export class PlayEventComponent implements OnInit, OnDestroy {
               private readonly httpClient:HttpClient) { 
 
     this.eventCode=<string>this._Activatedroute.snapshot.paramMap.get("code");
-    this.videoUrl='http://localhost:52802/api/Stream/'+this.eventCode;
+    this.videoUrl='http://localhost:52803/Stream/'+this.eventCode;
     this.intervalId=0;
   }
   ngOnDestroy(): void {
@@ -36,7 +36,7 @@ export class PlayEventComponent implements OnInit, OnDestroy {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
 
     //collect info about event as well
-    this.httpClient.get<Event>("http://localhost:52801/api/Events/"+this.eventCode).subscribe((response)=>{
+    this.httpClient.get<Event>("http://localhost:52803/Events/"+this.eventCode).subscribe((response)=>{
       this.event=response;
     },
     (error)=>{
@@ -51,7 +51,7 @@ export class PlayEventComponent implements OnInit, OnDestroy {
   }
 
   checkIfEventIsAvailable(){
-    this.httpClient.get('http://localhost:52802/api/Stream/'+this.eventCode+'/Check').subscribe((response)=>{
+    this.httpClient.get('http://localhost:52803/Stream/'+this.eventCode+'/Check').subscribe((response)=>{
       this.eventAvailable=true;
       this.waitingForStreaming=false;
       clearInterval(this.intervalId);

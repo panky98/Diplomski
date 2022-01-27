@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserMicroservice", "UserMicroservice\UserMicroservice.csproj", "{DB961805-2603-47E8-93E0-B737BAFF7487}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMicroservice", "EventM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{573C4CF2-33BA-47FC-A978-57FBE9B77FE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamingMicroservice", "StreamingMicroservice\StreamingMicroservice.csproj", "{C3C57670-6C80-42C8-AD26-B71E246BE68A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingMicroservice", "StreamingMicroservice\StreamingMicroservice.csproj", "{C3C57670-6C80-42C8-AD26-B71E246BE68A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{E5D977C9-0FF4-4205-A784-4233ED11E602}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3C57670-6C80-42C8-AD26-B71E246BE68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5D977C9-0FF4-4205-A784-4233ED11E602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5D977C9-0FF4-4205-A784-4233ED11E602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5D977C9-0FF4-4205-A784-4233ED11E602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5D977C9-0FF4-4205-A784-4233ED11E602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

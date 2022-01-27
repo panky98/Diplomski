@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   LogIn(usernameInput:string,passwordInput:string){
-    this.httpClient.get<{"token":string}>("http://localhost:52800/api/User/LogIn/"+usernameInput+"/"+passwordInput).pipe(catchError((error=>{
+    this.httpClient.get<{"token":string}>("http://localhost:52803/User/LogIn/"+usernameInput+"/"+passwordInput).pipe(catchError((error=>{
       return throwError(error);
     })))
     .subscribe((response)=>{

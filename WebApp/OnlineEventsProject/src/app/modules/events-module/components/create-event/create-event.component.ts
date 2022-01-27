@@ -35,7 +35,7 @@ export class CreateEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
-    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+    this.httpClient.get<Interest[]>("http://localhost:52803/Interest").subscribe((data)=>{
       data.forEach((interest)=>{
         this.selectOptions.push({label:interest.name,value:interest.id});
       });
@@ -61,13 +61,13 @@ export class CreateEventComponent implements OnInit {
     }
 
     this.isBusy=true;
-    this.httpClient.post<EventCreated>("http://localhost:52801/api/Events",newEvent).subscribe(
+    this.httpClient.post<EventCreated>("http://localhost:52803/Events",newEvent).subscribe(
       (response:EventCreated)=>{
         //upload file
         const formData=new FormData();
         formData.append('file',<File>this.file,(<File>this.file).name);
 
-        this.httpClient.post(`http://localhost:52801/api/Events/${response.code}/UploadFile`, formData, {reportProgress: true, observe: 'events'})
+        this.httpClient.post(`http://localhost:52803/Events/${response.code}/UploadFile`, formData, {reportProgress: true, observe: 'events'})
         .subscribe(event => {
           if (event.type === HttpEventType.UploadProgress)
             this.toastr.info("Uploaded: "+Math.round(100 * event.loaded / <number>event.total));

@@ -5,6 +5,8 @@ services:
     image: ${DOCKER_REGISTRY-}usermicroservice
     ports:
         - 52800:80
+    expose:
+        - 80
     build:
       context: .
       dockerfile: UserMicroservice\Dockerfile
@@ -19,6 +21,8 @@ services:
     image: ${DOCKER_REGISTRY-}eventmicroservice
     ports:
         - 52801:80
+    expose:
+        - 80
     build:
       context: .
       dockerfile: EventMicroservice/Dockerfile
@@ -123,10 +127,27 @@ services:
     image: ${DOCKER_REGISTRY-}streamingmicroservice
     ports:
       - "52802:80"
+    expose:
+        - 80
     depends_on:
         - broker
         - zookeeper
     build:
       context: .
       dockerfile: StreamingMicroservice/Dockerfile
+
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    ports:
+      - "52803:80"
+    expose:
+        - 80
+    depends_on:
+        - streamingmicroservice
+        - eventmicroservice
+        - usermicroservice
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
 

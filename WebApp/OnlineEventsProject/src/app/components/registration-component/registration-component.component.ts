@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+    this.httpClient.get<Interest[]>("http://localhost:52803/Interest").subscribe((data)=>{
       data.forEach((interest)=>{
         this.selectOptions.push({label:interest.name,value:interest.id});
       });
@@ -42,7 +42,7 @@ export class RegistrationComponent implements OnInit {
       interestsByUser:this.selectedOptions
     }
 
-    this.httpClient.post("http://localhost:52800/api/User",newUser).pipe(catchError((error=>{
+    this.httpClient.post("http://localhost:52803/User",newUser).pipe(catchError((error=>{
       return throwError(error);
     })))
     .subscribe(()=>{

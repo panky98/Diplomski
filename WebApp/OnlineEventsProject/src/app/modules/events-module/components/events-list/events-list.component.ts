@@ -29,12 +29,12 @@ export class EventsListComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.signalRService.connect(localStorage.getItem("eventsToken"));
     if(!this.myEvents){
-      this.httpClient.get<Event[]>("http://localhost:52801/api/Events").subscribe((response)=>{
+      this.httpClient.get<Event[]>("http://localhost:52803/Events").subscribe((response)=>{
         this.events=response;
       });
     }
     else{
-      this.httpClient.get<Event[]>("http://localhost:52801/api/Events/GetMyEvents").subscribe((response)=>{
+      this.httpClient.get<Event[]>("http://localhost:52803/Events/GetMyEvents").subscribe((response)=>{
         this.events=response;
       });
     }

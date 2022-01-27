@@ -22,7 +22,7 @@ export class EventsSingleComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+    this.httpClient.get<Interest[]>("http://localhost:52803/Interest").subscribe((data)=>{
       this.interests=data;
       this.event.interests=new Array<string>();
       for(let interestId of this.event.interestIds){
@@ -37,13 +37,13 @@ export class EventsSingleComponent implements OnInit {
   }
 
   onSubscribe():void{
-    this.httpClient.post("http://localhost:52801/api/Events/SubscribeToEvent?code="+this.event.code,null).subscribe((response)=>{
+    this.httpClient.post("http://localhost:52803/Events/SubscribeToEvent?code="+this.event.code,null).subscribe((response)=>{
       this.router.navigate(["my-events"]);
     },(error)=>{console.log(error)});
   }
 
   onUnsubscribe():void{
-      this.httpClient.post("http://localhost:52801/api/Events/UnsubscribeToEvent?code="+this.event.code,null).subscribe((response)=>{
+      this.httpClient.post("http://localhost:52803/Events/UnsubscribeToEvent?code="+this.event.code,null).subscribe((response)=>{
         this.router.navigate(["events"]);
       },(error)=>{console.log(error)});
   }

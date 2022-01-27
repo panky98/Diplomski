@@ -21,3 +21,10 @@ services:
     ports:
       - "52802:80"
 
+
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "52803:80"
+

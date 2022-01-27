@@ -27,7 +27,7 @@ export class SignalrService implements OnInit {
 
   connect(token:string | null)
   {
-    this.httpClient.get<Interest[]>("http://localhost:52800/api/Interest").subscribe((data)=>{
+    this.httpClient.get<Interest[]>("http://localhost:52803/Interest").subscribe((data)=>{
       this.interests=data;
     })
     if(!this.connection || this.connection.state!='Connected'){
