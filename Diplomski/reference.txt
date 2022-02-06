@@ -1,0 +1,10 @@
+[1]https://medium.com/swlh/a-design-analysis-of-cloud-based-microservices-architecture-at-netflix-98836b2da45f
+[2]https://www.geeksforgeeks.org/the-story-of-netflix-and-microservices/
+[3]https://microservices.io/
+[4]https://www.capitalone.com/tech/software-engineering/how-to-avoid-loose-coupled-microservices/
+[5]https://www.cuelogic.com/blog/microservices-in-practice-from-architecture-to-deployment
+[6]https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices
+[7]https://microservices.io/patterns/data/database-per-service.html
+[8]https://www.ibm.com/cloud/learn/message-brokers
+[9]https://kafka.apache.org/intro
+[10]https://microservices.io/patterns/reliability/circuit-breaker.html
