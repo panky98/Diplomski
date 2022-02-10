@@ -10,3 +10,4 @@
 [10]https://microservices.io/patterns/reliability/circuit-breaker.html
 [11]https://github.com/ThreeMammals/Ocelot
 [12]https://netflixtechblog.com/open-sourcing-zuul-2-82ea476cb2b3
+[13]https://martinfowler.com/articles/microservice-testing/#testing-integration-diagram
